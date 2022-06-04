@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Rain</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix"></canvas>
+</body>
+<script>
+    // Pegando o elemento do Canvas
+    const c = document.getElementById("matrix");
+
+    // Definindo o seu contexto
+    const ctx = c.getContext("2d");
+
+    // definindo o canvas com tamanho máximo da tela
+    c.height = window.innerHeight;
+    c.width = window.innerWidth;
+
+    // letras do Matrix Rain
+    // ver mais em: https://bit.ly/3yFJoU3
+    const letters = ["日", "ﾊ", "ﾐ", "ﾋ", "ｰ", "ｳ", "ｼ", "ﾅ", "ﾓ", "ﾆ", "ｻ", "ﾜ", "ﾂ", "ｵ", "ﾘ", "ｱ", "ﾎ", "ﾃ", "ﾏ", "ｹ", "ﾒ", "ｴ", "ｶ", "ｷ", "ﾑ", "ﾕ", "ﾗ", "ｾ", "ﾈ", "ｽ", "ﾀ", "ﾇ", "ﾍ", ":", "・", ".", "=", "*", "+", "-", "<", ">", "¦", "｜", "ﾘ"];
+
+    const fontSize = 18;
+
+    // definindo quantas colunas serão necessárias pelo tamanho da tela e fonte
+    const columns = c.width / fontSize;
+
+    // criando um array para cada gota, sempre iniciando na posição do y=1
+    const drops = new Array(Math.floor(columns)).fill(1);
+
+    let previousLetter = []
+    function draw() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.font = `${fontSize}px monospace`
+
+        for(let i = 0; i < drops.length; i++) {
+            console.log(previousLetter)
+            const text = letters[Math.floor(Math.random() * letters.length)];
+            const positionY = drops[i] * fontSize
+
+            ctx.fillStyle = '#FFF';
+            ctx.fillText(text, i * fontSize, positionY);
+
+            // ctx.shadowBlur = 3;
+            // ctx.shadowColor = "#0F0";
+            ctx.fillStyle = '#0F0';
+            ctx.fillText(previousLetter[i], i * fontSize, positionY - fontSize);
+            previousLetter[i] = text
+            
+            if (positionY > c.height && Math.random() > 0.95) {
+                drops[i] = 0;
+            }
+            drops[i]++;
+        }
+        // requestAnimationFrame(draw);
+    }
+    setInterval(draw, 50)
+
+    draw()    
+</script>
+</html>
